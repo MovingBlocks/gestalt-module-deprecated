@@ -147,10 +147,9 @@ public abstract class BaseModule implements Module {
             Path cachePath = archive.getPath(REFLECTIONS_CACHE_FILE);
             if (Files.isRegularFile(cachePath)) {
                 if (reflectionsFragment == null) {
-                    reflectionsFragment = new Reflections(new ConfigurationBuilder().addClassLoader(ClasspathHelper.staticClassLoader()));
-                }
-                try (InputStream stream = new BufferedInputStream(Files.newInputStream(cachePath))) {
-                    reflectionsFragment.collect(stream);
+                    try (InputStream stream = new BufferedInputStream(Files.newInputStream(cachePath))) {
+                        reflectionsFragment = new ConfigurationBuilder().getSerializer().read(stream);
+                    }
                 }
             }
         } catch (IOException e) {
